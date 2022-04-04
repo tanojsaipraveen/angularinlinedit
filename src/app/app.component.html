@@ -1,0 +1,137 @@
+<div class="wrapper">
+ <div style="margin-bottom: 10px;display: flex;">
+  
+  <input type="text" [ngModel]="titlesearch" (ngModelChange)="titlesearch = $event.toLowerCase()" class="inputsty" placeholder="Serach"/>
+  <button (click)="AddRecord()" class="btnsty">Add Record</button>
+ </div>
+ 
+  <div class="table">
+    <div class="row header blue">
+      <div class="cell">UserId</div>
+      <div class="cell">Title</div>
+      <div class="cell">True</div>
+      <div class="cell">False</div>
+      <div class="cell">Actions</div>
+    </div>
+
+    <div class="row" *ngFor="let item of userdata | customerEmailFilter:titlesearch | paginate:{
+      itemsPerPage:tableSize,
+      currentPage:page,
+      totalItems:count
+    }; index as i">
+      <div class="cell" data-title="UserId" *ngIf="!item.isEdit">
+        {{ item.id }}
+      </div>
+      <div class="cell" data-title="UserId" *ngIf="item.isEdit">
+        <input
+          type="text"
+          size="3"
+          class="form-control"
+          [(ngModel)]="item.id"
+        />
+      </div>
+
+      <div class="cell" data-title="Title" *ngIf="!item.isEdit">
+        {{ item.title }}
+      </div>
+      <div class="cell" data-title="Title" *ngIf="item.isEdit">
+        <input
+          type="text"
+          style="width: 100%"
+          class="form-control"
+          [(ngModel)]="item.title"
+        />
+      </div>
+      <div class="cell" data-title="Completed" *ngIf="!item.isEdit">
+        <input
+          type="radio"
+          value="{{item.completed}}"
+          [disabled]="!item.completed == true"
+          [checked]="item.completed == true"
+        
+        />
+      </div>
+      <div class="cell" data-title="Completed" *ngIf="item.isEdit">
+        <input
+          type="radio"
+          value="true"
+          [name]="i"
+          [checked]="item.completed == true"
+        />
+      </div>
+      <!-- <div class="cell" data-title="Completed" *ngIf="item.isEdit">
+        <input 
+        type="checkbox"
+        value="true"
+        name="comp">
+      </div> -->
+      <div class="cell" data-title="Completed" *ngIf="!item.isEdit">
+        <input
+          type="radio"
+          value="{{item.completed}}"
+          [disabled]="!item.completed == false"
+          [checked]="item.completed == false"
+        />
+      </div>
+      <div class="cell" data-title="Completed" *ngIf="item.isEdit">
+        <input
+          type="radio"
+          value="false"
+          [name]="i"
+          [checked]="item.completed == false"
+        />
+      </div>
+      <!-- <div class="cell" data-title="Completed" *ngIf="item.isEdit">
+        <input 
+        type="checkbox"
+        value="false"
+        name="comp">
+      </div> -->
+     
+      <!-- <div class="cell" data-title="Completed" *ngIf="item.isEdit">
+        <input type="text" size="3" class="form-control"  [(ngModel)]="item.completed"/> 
+        </div> -->
+     <div *ngIf=" !item.isEdit">
+      <div class="cell" data-title="Completed">
+        <img
+          src="../assets/pen-to-square-solid.svg"
+          class="iconsty"
+          alt=""
+          (click)="UpdateRecord(item)"
+        />
+        <img
+          src="../assets/trash-solid.svg"
+          class="iconstydel"
+          alt=""
+          (click)="DeleteRecord(item)"
+        />
+      </div>
+     </div>
+      <div *ngIf=" item.isEdit">
+        <div class="cell" data-title="Completed">
+          <img
+            src="../assets/check-solid.svg"
+            class="iconsty"
+            alt=""
+            (click)="checkRecord(item)"
+          />
+          <img
+            src="../assets/xmark-solid.svg"
+            class="iconstydel"
+            alt=""
+            (click)="crossRecord(item)"
+          />
+        </div>
+     </div>
+    </div>
+  </div>
+ <div style="display: flex;width: 100%; justify-content: center;">
+  <p>Items per page :</p> <select (change)="onTableSizeChange($event)" class="pageselect">
+    <option *ngFor="let size of tableSizes">
+      {{size}}
+    </option>
+  </select>
+  <pagination-controls previousLabel="Prev" nextLabel="Next" (pageChange)="onTableDataChange($event)"></pagination-controls>
+  
+ </div>
+</div>
